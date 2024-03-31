@@ -5,8 +5,8 @@ KERNEL = src/kernel
 qemu: 
 	@$(MAKE) -C $(KERNEL) qemu
 
-all:
-	@$(MAKE) -C $(KERNEL)/
+disk:
+	@$(MAKE) -C $(KERNEL) all
 
 clean:
 	rm ./build/boot/*.bin

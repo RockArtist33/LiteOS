@@ -143,6 +143,16 @@ void term_putchar(char c)
             row = VGA_HEIGHT-1;
         }
         column = 0;
+        update_cursor(column, row);
+        return;
+    }
+    if (c == '^') {
+        if (--column < 0) {
+          row -=1;
+          column = VGA_WIDTH-1; 
+        }
+        term_putentryat(' ', term_color, column, row);
+        update_cursor(column, row);
         return;
     }
     term_putentryat(c, term_color, column, row);

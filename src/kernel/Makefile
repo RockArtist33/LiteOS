@@ -9,7 +9,16 @@ TARGET_ARCH = i386
 TARGET = ../../build
 TARGET_ISO = ../../LiteOS.iso
 
-OBJS = $(TARGET)/objs/boot.o $(TARGET)/objs/serial.o $(TARGET)/objs/system.o $(TARGET)/objs/timer.o $(TARGET)/objs/vga.o $(TARGET)/objs/printf.o $(TARGET)/objs/kernel.o
+OBJS = $(TARGET)/objs/boot.o \
+	$(TARGET)/objs/gdt.o \
+	$(TARGET)/objs/asm_gdt.o \
+	$(TARGET)/objs/serial.o \
+	$(TARGET)/objs/ps2.o \
+	$(TARGET)/objs/system.o \
+	$(TARGET)/objs/timer.o \
+	$(TARGET)/objs/vga.o \
+	$(TARGET)/objs/printf.o \
+	$(TARGET)/objs/kernel.o
 OBJS_OUTPUT = ../../build/boot/LiteOS.bin
 
 
@@ -28,6 +37,15 @@ $(TARGET)/objs/system.o: cpu/system.c
 $(TARGET)/objs/serial.o: drivers/serial.c
 	mkdir $(TARGET)/objs -p
 	$(COMPILER) $(COMPILER_FLAGS) -o $(TARGET)/objs/serial.o drivers/serial.c
+$(TARGET)/objs/gdt.o: cpu/gdt.c
+	mkdir $(TARGET)/objs -p
+	$(COMPILER) $(COMPILER_FLAGS) -o $(TARGET)/objs/gdt.o cpu/gdt.c
+$(TARGET)/objs/asm_gdt.o: cpu/gdt.asm
+	mkdir $(TARGET)/objs -p
+	$(ASSEMBLER) $(ASSEMBLER_FLAGS) -o $(TARGET)/objs/asm_gdt.o cpu/gdt.asm
+$(TARGET)/objs/ps2.o: drivers/ps2.c
+	mkdir $(TARGET)/objs -p
+	$(COMPILER) $(COMPILER_FLAGS) -o $(TARGET)/objs/ps2.o drivers/ps2.c
 $(TARGET)/objs/timer.o: cpu/timer.c
 	mkdir $(TARGET)/objs -p
 	$(COMPILER) $(COMPILER_FLAGS) -o $(TARGET)/objs/timer.o cpu/timer.c

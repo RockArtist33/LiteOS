@@ -45,6 +45,9 @@ void serial_write(int device_port, char a) {
 }
 
 void debug(char c, void *arg) {
+    if ((c == '\n')) {
+        serial_write(COM_PORT1, '\r');
+    }
     serial_write(COM_PORT1, c);
 }
 

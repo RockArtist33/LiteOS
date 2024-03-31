@@ -17,7 +17,8 @@ void init_Timer(uint32_t reload_value){
 
     outportb(0x40, l);
     outportb(0x40, h);
-    debugf("Current timer frequency: %dMHz\n",timerFrequency);
+    debugf("[timer] Current timer frequency: %dMHz\n",timerFrequency);
+    debugf("[timer] Idk if this is actually working properly\n");
 }
 
 void timer_handler(){
