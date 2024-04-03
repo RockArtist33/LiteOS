@@ -12,5 +12,6 @@ int seconds;
 
 void init_Timer(uint32_t reload_value);
 void timer_handler();
+void sleep(uint32_t timeValue);
 
 #endif

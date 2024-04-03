@@ -25,7 +25,10 @@ void kernel_main(void) {
     init_Timer(1000);
     ascii_title();
     printf("\n\n ~ $");
-    keyboard_analysis();
+    sleep(100);
+    printf("Has a second passed? YOU DECIDE\n");
+    char array[4];
+    printf("array: %c",array[4000000000]);
     
     
     

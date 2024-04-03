@@ -24,3 +24,10 @@ void init_Timer(uint32_t reload_value){
 void timer_handler(){
     timerticks++;
 }
+
+void sleep(uint32_t timeValue) {
+    uint64_t target = timerticks + (timeValue);
+    while (target > timerticks){
+        timerticks++;
+    } 
+}
