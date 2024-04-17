@@ -1,15 +1,43 @@
-extern exception_handler
+
+isr_common:
+    ; push registers to match struct AsmPassedInterrupt (little endian)
+    pushad
+    push ds
+    push es
+    push fs
+    push gs
+
+    ; load kernel data segment
+    push ebx
+    mov bx, 0x10
+    mov ds, bx
+    mov es, bx
+    mov fs, bx
+    mov gs, bx
+    pop ebx
+
+    extern exception_handler
+    call exception_handler
+
+    pop gs
+    pop fs
+    pop es
+    pop ds
+    popad
+    add esp, 8
+    iret
 
 %macro isr_err_code 1
 isr_code_%+%1:
-    call exception_handler
-    iret 
+    push dword %1
+    jmp isr_common
 %endmacro
 ; if writing for 64-bit, use iretq instead
 %macro isr_no_err_code 1
 isr_code_%+%1:
-    call exception_handler
-    iret
+    push dword %0
+    push dword %1
+    jmp isr_common
 %endmacro
 
 
@@ -46,10 +74,29 @@ isr_no_err_code 29
 isr_err_code    30
 isr_no_err_code 31
 
+; Interupt Requests (IRQS)
+; All IRQS 0 to 15 are mapped to 32 - 47
+isr_no_err_code 32 ; Programmable Interval Timer (PIT)
+isr_no_err_code 33
+isr_no_err_code 34
+isr_no_err_code 35
+isr_no_err_code 36
+isr_no_err_code 37
+isr_no_err_code 38
+isr_no_err_code 39
+isr_no_err_code 40
+isr_no_err_code 41
+isr_no_err_code 42
+isr_no_err_code 43
+isr_no_err_code 44
+isr_no_err_code 45
+isr_no_err_code 46
+isr_no_err_code 47
+
 global isr_code_table
 isr_code_table:
 %assign i 0 
-%rep    32 
+%rep    48
     dd isr_code_%+i ; use DQ instead if targeting 64-bit
 %assign i i+1 
 %endrep

@@ -2,9 +2,9 @@ MBOOT_PAGE_ALIGN		equ 1 << 0
 MBOOT_MEMINFO 			equ 1 << 1
 ; MBOOT_FLAGS 			equ MBOOT_PAGE_ALIGN | MBOOT_MEMINFO
 MBOOT_ARCH				equ 0
-MBOOT_MAGIC_NUMBER 		equ 0xe85250d6
+MBOOT_MAGIC_NUMBER 		equ 0xE85250D6
 
-section .multiboot
+section .multiboot2
 header_start:
 	dd 						MBOOT_MAGIC_NUMBER
 	dd 						MBOOT_ARCH
@@ -29,7 +29,10 @@ global _start
 _start:
 	cli
 	mov esp, stack_top
+	push ebx
+	push eax
 	call kernel_main
+	hlt
 
 halt:
 	hlt

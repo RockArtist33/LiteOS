@@ -1,5 +1,5 @@
-#ifndef GDT_H
-#define GDT_H
+#ifndef ISR_H
+#define ISR_H
 
 #include <stdbool.h>
 #include <stddef.h>
@@ -7,6 +7,15 @@
 
 #define IDT_MAX_DESCRIPTORS 256
 
+typedef struct {
+  // pushed by us:
+  uint32_t gs, fs, es, ds;
+  uint32_t edi, esi, ebp, esp, ebx, edx, ecx, eax; // esp is ignored
+  uint32_t interrupt, error;
+
+  // pushed by the CPU:
+  uint32_t eip, cs, eflags, usermode_esp, usermode_ss;
+} AsmPassedInterrupt;
 
 typedef struct {
 	uint16_t    isr_low;      // The lower 16 bits of the ISR's address
@@ -26,9 +35,7 @@ static idtr_t idtr;
 extern void* isr_code_table[];
 
 void idt_set_descriptor(uint8_t vector, void* isr, uint8_t flags);
-void idt_init();
-
-__attribute__((noreturn))
+void install_isr(); // WORK
 void exception_handler();
 
 #endif

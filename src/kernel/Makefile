@@ -79,7 +79,7 @@ $(TARGET)/objs/kernel.o: entry/kernel.c
 	$(COMPILER) $(COMPILER_FLAGS) -o $@ $<
 	
 qemu: all
-	qemu-system-$(TARGET_ARCH) -cdrom $(TARGET_ISO)
+	qemu-system-$(TARGET_ARCH) -cdrom $(TARGET_ISO) -d int -D interrupt.log -no-reboot
 
 qemu-kvm: all
-	qemu-system-$(TARGET_ARCH) -accel kvm -cdrom $(TARGET_ISO)
+	qemu-system-$(TARGET_ARCH) -accel kvm -cdrom $(TARGET_ISO) -d int -D interrupt.log -no-reboot

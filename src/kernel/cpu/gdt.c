@@ -1,7 +1,10 @@
 #include <stdint.h>
+#include <serial.h>
+#include <stdlib.h>
 #include <gdt.h>
 
-void setGdtEntry( uint32_t num, uint32_t limit, uint32_t base, uint8_t access, uint8_t flags)
+
+void setGdtEntry( uint32_t num, uint32_t base, uint32_t limit, uint8_t access, uint8_t flags)
 {
     GdtEntries[num].low_limt = (limit & 0xFFFF); // 16-bit
     GdtEntries[num].low_base = (base & 0xFFFF); // 16-bit
@@ -10,11 +13,17 @@ void setGdtEntry( uint32_t num, uint32_t limit, uint32_t base, uint8_t access, u
     GdtEntries[num].flagsAndLimit = ((limit >> 16) & 0x0F); // 4-bit
     GdtEntries[num].flagsAndLimit |= (flags & 0xF0); // 4-bit
     GdtEntries[num].high_base = ((base >> 24) & 0xFF);
+    
 }
 
 void setupGdt() {
+    debugf("\n|------------------------ GDT SETUP ------------------------|\n");
     gdt_ptr.limit = GDT_ENTRIES_NUM * 8 - 1;
     gdt_ptr.base = (uint32_t)&GdtEntries;
+
+    memset((uint8_t *)&tss, 0, sizeof(tss));
+    tss.ss0 = 0x10;
+
     // GDT ENTRIES
     // ---------------------
     // NULL DESCRIPTOR
@@ -22,12 +31,18 @@ void setupGdt() {
     // KERNEL DATA SEGMENT
     // USER CODE SEGMENT
     // USER DATA SEGMENT
-    // TASK STATE SEGMENT - NOT IMPLEMENTED
+    // TASK STATE SEGMENT
     setGdtEntry(0, 0, 0, 0, 0);
-    setGdtEntry(1, 0xFFFFF, 0, 0x9A, 0xC);
-    setGdtEntry(2, 0xFFFFF, 0, 0x92, 0XC);
-    setGdtEntry(3, 0xFFFFF, 0, 0xFA, 0xC);
-    setGdtEntry(4, 0xFFFFF, 0, 0xF2, 0xC);
-    //setGdtEntry(5, (uint32_t)&tss, sizeof(tss), 0x89, 0x40);
+    setGdtEntry(1, 0, 0xFFFFFFFF, 0x9A, 0xC0);
+    setGdtEntry(2, 0, 0xFFFFFFFF, 0x92, 0XC0);
+    setGdtEntry(3, 0, 0xFFFFFFFF, 0xFA, 0xC0);
+    setGdtEntry(4, 0, 0xFFFFFFFF, 0xF2, 0xC0);
+    setGdtEntry(5, (uint32_t)&tss, sizeof(tss), 0x89, 0x40);
+    
+    debugf("[GDT] All gdt entries entered\n");
+    
     gdt_flush((uint32_t)&gdt_ptr);
+    tss_flush();
+
+    debugf("[GDT] GDT has been flushed\n");
 }

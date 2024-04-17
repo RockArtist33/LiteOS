@@ -6,7 +6,7 @@ SECTIONS
 
 	.boot ALIGN(4K):
 	{
-		*(.multiboot)
+		*(.multiboot2)
 	}
 	
 
