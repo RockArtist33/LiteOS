@@ -58,7 +58,6 @@ void kernel_main(uint32_t magic, unsigned long mBInfoStructAddr) {
     sleep(1);
     ascii_title();
     int num = 0;
-    num = num / 0;
     int color;
     /*
     int fg;
