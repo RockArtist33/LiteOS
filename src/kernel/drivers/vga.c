@@ -2,6 +2,7 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <printf.h>
+#include <serial.h>
 #include <system.h>
 
 enum vga_color {
@@ -48,6 +49,8 @@ size_t row;
 size_t column;
 uint8_t term_color;
 uint16_t* term_buffer;
+uint16_t cursor_pos;
+
 void enable_cursor(uint8_t cursor_start, uint8_t cursor_end)
 {
 	outportb(0x3D4, 0x0A);
@@ -88,12 +91,13 @@ void term_setcolor(uint8_t color)
 
 void update_cursor(int x, int y)
 {
-	uint16_t pos = y * VGA_WIDTH + x;
+	cursor_pos = y * VGA_WIDTH + x;
+    term_buffer[cursor_pos] = vga_entry(' ', term_color);
  
 	outportb(0x3D4, 0x0F);
-	outportb(0x3D5, (uint8_t) (pos & 0xFF));
+	outportb(0x3D5, (uint8_t) (cursor_pos & 0xFF));
 	outportb(0x3D4, 0x0E);
-	outportb(0x3D5, (uint8_t) ((pos >> 8) & 0xFF));
+	outportb(0x3D5, (uint8_t) ((cursor_pos >> 8) & 0xFF));
 }
 
 uint16_t get_cursor_position(void)
@@ -130,8 +134,7 @@ void term_newline(){
 
 void term_putentryat(char c, uint8_t color, size_t x, size_t y)
 {
-    const size_t index = y * VGA_WIDTH + x;
-    term_buffer[index] = vga_entry(c, color);
+    term_buffer[cursor_pos] = vga_entry(c, color);
 }
 
 void term_putchar(char c)
@@ -147,9 +150,12 @@ void term_putchar(char c)
         return;
     }
     if (c == '^') {
-        if (--column < 0) {
-          row -=1;
-          column = VGA_WIDTH-1; 
+        if (column-- == 0) {
+            row -=1;
+            column = VGA_WIDTH-1;
+            while (((term_buffer[row*VGA_WIDTH+column-1]) == vga_entry(' ', term_color)) && (column > 0)) {
+                column--;
+            }
         }
         term_putentryat(' ', term_color, column, row);
         update_cursor(column, row);

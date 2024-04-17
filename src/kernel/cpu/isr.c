@@ -1,13 +1,45 @@
 #include <stdint.h>
+#include <printf.h>
 #include <system.h>
 #include <timer.h>
 #include <serial.h>
 #include <isr.h>
-/*
-struct Exceptions {
 
-}
-*/
+char *Exceptions[] = {
+    "Divided by Zero",
+    "Debug Exception called",
+    "Detected a Non-maskable Interrupt",
+    "Breakpoint has been reached",
+    "Overflow when executing INTO instruction",
+    "Out of Bounds",
+    "Specified Opcode is invalid",
+    "FPU device not available",
+    "Double fault detected",
+    "Coprocessor Segment Overrun",
+    "Task State Segment is invalid",
+    "Segment isnt available",
+    "Stack fault detected",
+    "General Protection Fault",
+    "Page fault",
+    "Reserved",
+    "x87 Floating-point Exception detected",
+    "Memeroy data reference is unaligned",
+    "Machine check exception",
+    "SIMD Floating-Point Exception",
+    "Virtualization Exception",
+    "Control Protection Exception",
+    "Reserved",
+    "Reserved",
+    "Reserved",
+    "Reserved",
+    "Reserved",
+    "Reserved",
+    "Hypervisor Injection Exception",
+    "VMM Communication Exception",
+    "Security Exception",
+    "Reserved"
+  };
+
 
 void idt_set_descriptor(uint8_t num, void* isr, uint8_t flags) {
     idt_entry_t* descriptor = &idt[num];
@@ -66,6 +98,7 @@ void exception_handler(AsmPassedInterrupt regs) {
       break;
     }
   } else if (regs.interrupt >= 0 && regs.interrupt <= 31) { // ISR
+    printf("[ISR] Kernel Panic: %s!\n", Exceptions[regs.interrupt]);
     asm("hlt");
   } else if (regs.interrupt == 0x80) {
     // reserved for syscall

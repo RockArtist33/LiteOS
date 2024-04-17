@@ -10,6 +10,6 @@ uint64_t timerticks;
 
 void init_Timer(uint32_t reload_value);
 void timer_handler();
-void sleep(uint32_t timeValue);
+void sleep(uint32_t timeValue); // timevalue: Seconds
 
 #endif

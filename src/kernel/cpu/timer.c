@@ -26,7 +26,7 @@ void timer_handler(){
 }
 
 void sleep(uint32_t timeValue) {
-    uint64_t target = timerticks + (timeValue);
+    uint64_t target = timerticks + (timeValue*1000);
     while (target > timerticks){
     } 
 }

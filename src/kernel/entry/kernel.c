@@ -13,6 +13,7 @@
 #define MULTIBOOT2_MAGIC 0x36d76289
 
 void ascii_title() {
+    term_clear();
     printf("==========================================\n");
     printf("|                                        |\n");
     printf("|                                        |\n");
@@ -22,7 +23,7 @@ void ascii_title() {
     printf("|   | |___ | || |_ |  __/| |_| | ___) |  |\n");
     printf("|   |_____||_| \\__| \\___| \\___/ |____/   |\n");
     printf("|                                        |\n");
-    printf("|             Version: 0.0.0             |\n");
+    printf("|             Version: 0.0.1             |\n");
     printf("|                                        |\n");
     printf("==========================================   \n\n");
 }
@@ -45,23 +46,46 @@ void kernel_main(uint32_t magic, unsigned long mBInfoStructAddr) {
     if (init_serial(COM_PORT1) != 0) {
         debugf("[Serial] Serial port (%x) Failed to initialise: is faulty\n");
     }
-    debugf("[Serial] Serial port %x has been initialised successfully\n", COM_PORT1);
 
+    debugf("[Serial] Serial port %x has been initialised successfully\n", COM_PORT1);
     debugf("[Multiboot] Multiboot2 has been reached:\n  - magic: %x\n  - MultibootInfoStruct Address: %x\n  - MultibootInfoStructSize: %x\n", magic, mBInfoStructAddr, mBInfoStructSize);
 
     setupGdt();
     install_isr();
-    printf("Started...");
     init_Timer(1000);
-    
-    int num = 0;
 
-    while (true) {
-        sleep(1000);
-        num++;
-        printf("%i seconds\n", num);
+    printf("[NOTE] Kernel Initialisation complete, starting shell.\n");
+    sleep(1);
+    ascii_title();
+    int num = 0;
+    num = num / 0;
+    int color;
+    /*
+    int fg;
+    fg = 15;
+    for (int i = 0; i < 16; i++){
+        color = (fg | i << 4);
+        term_setcolor(color);
+        printf("        ");
+        if (((i+1) % 4 == 0)) {
+            printf("\n");
+        }
     }
-    
+    for (int i = 0; i < 16; i++){
+        color = (fg-i | i << 4);
+        term_setcolor(color);
+        printf("ABCDEFGH");
+        if (((i+1) % 4 == 0)) {
+            printf("\n");
+        }
+    }
+    term_setcolor(0x0F);
+    */
+    while (true) {
+        sleep(1);
+        num++;
+        printf("[test] %i seconds\n", num);
+    }
 
     
     
