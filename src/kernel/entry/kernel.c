@@ -44,11 +44,12 @@ void kernel_main(uint32_t magic, unsigned long mBInfoStructAddr) {
     mBInfoStruct = (struct multiboot_tag *)(mBInfoStructAddr + 8);
     uint32_t COM_PORT1 = 0x3F8;
     if (init_serial(COM_PORT1) != 0) {
-        debugf("[Serial] Serial port (%x) Failed to initialise: is faulty\n");
+        printf("[Serial] Serial port (0x%x) Failed to initialise: is faulty\n");
+        asm __volatile__ ("hlt");
     }
-
-    debugf("[Serial] Serial port %x has been initialised successfully\n", COM_PORT1);
-    debugf("[Multiboot] Multiboot2 has been reached:\n  - magic: %x\n  - MultibootInfoStruct Address: %x\n  - MultibootInfoStructSize: %x\n", magic, mBInfoStructAddr, mBInfoStructSize);
+    debugf("#------------------------ DEBUG LOG ------------------------#\n");
+    debugf("[Serial] Serial port 0x%x has been initialised successfully\n", COM_PORT1);
+    debugf("[Multiboot] Multiboot2 has been reached:\n  - magic: 0x%x\n  - MultibootInfoStruct Address: 0x%x\n  - MultibootInfoStructSize: 0x%x\n", magic, mBInfoStructAddr, mBInfoStructSize);
 
     setupGdt();
     install_isr();
@@ -59,32 +60,35 @@ void kernel_main(uint32_t magic, unsigned long mBInfoStructAddr) {
     ascii_title();
     int num = 0;
     int color;
-    /*
     int fg;
     fg = 15;
-    for (int i = 0; i < 16; i++){
-        color = (fg | i << 4);
-        term_setcolor(color);
-        printf("        ");
-        if (((i+1) % 4 == 0)) {
-            printf("\n");
-        }
-    }
-    for (int i = 0; i < 16; i++){
-        color = (fg-i | i << 4);
-        term_setcolor(color);
-        printf("ABCDEFGH");
-        if (((i+1) % 4 == 0)) {
-            printf("\n");
-        }
-    }
-    term_setcolor(0x0F);
-    */
     while (true) {
-        sleep(1);
-        num++;
-        printf("[test] %i seconds\n", num);
+        for (int x = 0; x < 2; x++) {
+            for (int i = 0; i < 16; i++){
+                sleep(100);
+                color = (fg | i << 4);
+                term_setcolor(color);
+                printf("        ");
+                if (((i+1) % 8 == 0)) {
+                    printf("\n");
+                }
+            }
+        }
+        for (int x = 0; x < 2; x++) {
+            for (int i = 0; i < 16; i++){
+                sleep(100);
+                color = (fg-i | i << 4);
+                term_setcolor(color);
+                printf("ABCDEFGH");
+                if (((i+1) % 8 == 0)) {
+                    printf("\n");
+                }
+            }
+            term_setcolor(0x0F);
+        }
+        
     }
+    
 
     
     

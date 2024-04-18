@@ -11,8 +11,6 @@ void init_Timer(uint32_t reload_value){
 
     outportb(0x43, 0x36);
 
-    debugf("%x\n",timerFrequency & 0xFF);
-
     uint8_t l = (uint8_t) (timerFrequency & 0xFF);
     uint8_t h = (uint8_t) (timerFrequency >> 8 & 0xFF);
 
@@ -26,7 +24,7 @@ void timer_handler(){
 }
 
 void sleep(uint32_t timeValue) {
-    uint64_t target = timerticks + (timeValue*1000);
+    uint64_t target = timerticks + (timeValue);
     while (target > timerticks){
     } 
 }

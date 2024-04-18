@@ -99,6 +99,8 @@ void exception_handler(AsmPassedInterrupt regs) {
     }
   } else if (regs.interrupt >= 0 && regs.interrupt <= 31) { // ISR
     printf("[ISR] Kernel Panic: %s!\n", Exceptions[regs.interrupt]);
+    debugf("\n|---------------------- KERNEL PANIC -----------------------|\n");
+    debugf("[ISR] Exception Detected: %s!\n", Exceptions[regs.interrupt]);
     asm("hlt");
   } else if (regs.interrupt == 0x80) {
     // reserved for syscall

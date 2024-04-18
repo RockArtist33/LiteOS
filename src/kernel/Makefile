@@ -9,6 +9,8 @@ TARGET_ARCH = i386
 TARGET = ../../build
 TARGET_ISO = ../../LiteOS.iso
 
+EMULATOR = qemu-system-$(TARGET_ARCH) -cdrom $(TARGET_ISO) -d int -D interrupt.log -serial file:serial.log
+
 OBJS = $(TARGET)/objs/boot.o \
 	$(TARGET)/objs/gdt.o \
 	$(TARGET)/objs/isr.o \
@@ -79,7 +81,7 @@ $(TARGET)/objs/kernel.o: entry/kernel.c
 	$(COMPILER) $(COMPILER_FLAGS) -o $@ $<
 	
 qemu: all
-	qemu-system-$(TARGET_ARCH) -cdrom $(TARGET_ISO) -d int -D interrupt.log -no-reboot
+	$(EMULATOR)
 
 qemu-kvm: all
-	qemu-system-$(TARGET_ARCH) -accel kvm -cdrom $(TARGET_ISO) -d int -D interrupt.log -no-reboot
+	$(EMULATOR) -accel kvm
