@@ -120,6 +120,9 @@ void term_clear()
             term_buffer[index] = vga_entry(' ', term_color);
         }
     }
+    update_cursor(0,0);
+    row = 0;
+    column = 0;
 }
 void term_newline(){
     for (size_t y = 0; y < VGA_HEIGHT; y++)

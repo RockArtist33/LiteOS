@@ -9,7 +9,7 @@ TARGET_ARCH = i386
 TARGET = ../../build
 TARGET_ISO = ../../LiteOS.iso
 
-EMULATOR = qemu-system-$(TARGET_ARCH) -cdrom $(TARGET_ISO) -d int -D interrupt.log -serial file:serial.log
+EMULATOR = qemu-system-$(TARGET_ARCH) -cdrom $(TARGET_ISO) -d int -D interrupt.log
 
 OBJS = $(TARGET)/objs/boot.o \
 	$(TARGET)/objs/gdt.o \
@@ -17,7 +17,7 @@ OBJS = $(TARGET)/objs/boot.o \
 	$(TARGET)/objs/asm_gdt.o \
 	$(TARGET)/objs/asm_isr.o \
 	$(TARGET)/objs/serial.o \
-	$(TARGET)/objs/ps2.o \
+	$(TARGET)/objs/keyboard.o \
 	$(TARGET)/objs/system.o \
 	$(TARGET)/objs/timer.o \
 	$(TARGET)/objs/vga.o \
@@ -60,7 +60,7 @@ $(TARGET)/objs/isr.o: cpu/isr.c
 	mkdir $(TARGET)/objs -p
 	$(COMPILER) $(COMPILER_FLAGS) -o $@ $<
 
-$(TARGET)/objs/ps2.o: drivers/ps2.c
+$(TARGET)/objs/keyboard.o: drivers/keyboard.c
 	mkdir $(TARGET)/objs -p
 	$(COMPILER) $(COMPILER_FLAGS) -o $@ $<
 

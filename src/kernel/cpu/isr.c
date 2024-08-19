@@ -4,6 +4,7 @@
 #include <timer.h>
 #include <serial.h>
 #include <isr.h>
+#include <keyboard.h>
 
 char *Exceptions[] = {
     "Divided by Zero",
@@ -94,7 +95,12 @@ void exception_handler(AsmPassedInterrupt regs) {
       timer_handler();
       break;
 
+    case 33:
+      DetectIncomingChar();
+      break;
+
     default:
+      debugf("[ISR] interrupt code: %i\n", regs.interrupt);
       break;
     }
   } else if (regs.interrupt >= 0 && regs.interrupt <= 31) { // ISR

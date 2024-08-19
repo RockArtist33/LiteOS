@@ -16,8 +16,8 @@ int init_serial(int port_device) {
    outportb(port_device + 4, 0x0B);    // IRQs enabled, RTS/DSR set
    outportb(port_device + 4, 0x1E);    // Set in loopback mode, test the serial chip
    outportb(port_device + 0, 0xAE);    // Test serial chip (send byte 0xAE and check if serial returns same byte)
-
     if (inportb(port_device+0) != 0xAE) {
+        printf("inportb value: %X\n",inportb(port_device+0));
         return 1;
     }
 

@@ -6,7 +6,6 @@
 #include <stdint.h>
 
 #define IDT_MAX_DESCRIPTORS 256
-
 typedef struct {
   // pushed by us:
   uint32_t gs, fs, es, ds;
